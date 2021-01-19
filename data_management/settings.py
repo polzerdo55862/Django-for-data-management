@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -37,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'data_processing_app'
 ]
 
 MIDDLEWARE = [
@@ -73,13 +75,23 @@ WSGI_APPLICATION = 'data_management.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'personal_dashboard',
+        'USER': 'root',
+        'PASSWORD': os.environ['MYSQL_SECRET'],
+        'HOST': 'localhost',   # Or an IP Address that your DB is hosted on
+        'PORT': '3308',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
@@ -118,3 +130,26 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+from datetime import date, datetime
+import os
+
+#defines the time frame the script uses to calculate your over time
+start_date = datetime(2020, 1, 9)
+end_date = datetime.today()
+
+#to caluclate the target hours, the vacation_days in the chosen time frame are needed
+vacation_days = [
+                 datetime(2020, 12, 30),
+                 ]
+
+#working hours per day
+target_hours_per_day = 7
+
+#needed for authentification, you can find the token to your acc at the the end of the profile
+#settings page "https://track.toggl.com/profile"
+toggl_api = os.environ['TOGGL_API'] #my toggl api token is saved as environmental variable
+
+
+
+
